@@ -8,7 +8,7 @@ export default class GamePage {
     }
 
     // Constants
-    url = (name: string) => `/game/${encodeURIComponent(name)}`;
+    url = (name?: string) => name ? `/game/${encodeURIComponent(name)}` : '/game/';
 
     // Selectors
     cookieClickerHomepageLink = () => this.page.getByRole('link', { name: 'Cookie Clicker!' });
@@ -34,6 +34,12 @@ export default class GamePage {
     // Methods
     public async goto(name: string) {
         await this.page.goto(this.url(name));
+    }
+
+    public async clickCookies(amount: number) {
+        for (let index = 0; index < amount; index++) {
+            await this.clickCookieButton().click();
+        }
     }
 
     public async sellCookies(amount: number) {

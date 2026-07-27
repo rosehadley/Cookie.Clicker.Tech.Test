@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import { Page , expect} from "@playwright/test";
 import createUniqueName from '../helpers/create-unique-name'
 
 export default class HomePage {
@@ -13,23 +13,59 @@ export default class HomePage {
 
     newGameForm = () => this.page.getByRole('form');
 
-    nameInput = () => this.newGameForm().locator('input');
+    nameInput = () => this.page.getByRole('textbox');
 
-    startGameButton = () => this.newGameForm().getByRole('button', { name: 'Start!' });
+    startGameButton = () => this.page.getByRole('button', { name: 'Start!' });
 
     highScoresHeader = () => this.page.getByRole('heading', { name: 'High Scores' });
 
-    highScoresTable = () => this.page.getByRole('table').filter({ hasText: 'Player' })
+    highScoresTable = () => this.page.getByRole('table').filter({ hasText: 'Player' });
+
+    scoreTableUserRow = (name: string) => this.highScoresTable().filter({ has: this.highScoresTable().getByText(name, { exact: true }) })
+
+    scoreTableUserName = (name: string) => this.scoreTableUserRow(name).getByRole('cell').first();
+    
+    scoreTableUserScore = (name: string) => this.scoreTableUserRow(name).getByRole('cell').nth(1);
+
+    nthScoreTableScore = (index: number) => this.highScoresTable().getByRole('row').nth(index).getByRole('cell').nth(1);
+
 
     // Methods
-    public async goto() {}
+    public async goto() {
+        await this.page.goto('', { waitUntil: 'domcontentloaded' });
+        await expect(this.cookieClickerHeader(), 'The page header should be visible if the page has loaded correctly').toBeVisible();       
+    }
 
+    /**
+     * Navigate's to the Cookie Clicker homepage, enters a name, and clicks Start Game! to navigate to the new game
+     * @param name - A string with 10 random alphanumeric characters and an optional prefix
+     */
     public async createNewGame(name: string = createUniqueName()) {
         await this.goto();
-        await this.page.waitForEvent('domcontentloaded');
 
         await this.nameInput().fill(name);
         await this.startGameButton().click();
-        await this.page.waitForURL('**/game/**');
+        await this.page.waitForURL(`**/game/${encodeURIComponent(name)}`);
+
+        return name;
     }
+
+    public async goToUserGameFromScoreTable(name: string) {
+        await this.goto();
+
+        await this.scoreTableUserName(name).click();
+        await this.page.waitForURL(`**/game/${encodeURIComponent(name)}`);
+    }
+
+    public async getUserHighScoreTablePosition(name: string): Promise<number> {
+        let index = await this.highScoresTable().getByRole('row').evaluateAll((rows, name) => {
+            return rows.findIndex( row => row.textContent?.includes(name))
+        }, name);
+
+        if (index === -1) {
+            throw new Error(`The user ${name} has not been found in the High Scores table`)
+        }
+        return index + 1;
+    }
+
 }
