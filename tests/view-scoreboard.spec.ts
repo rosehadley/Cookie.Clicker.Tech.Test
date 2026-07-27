@@ -13,10 +13,11 @@ test.describe('As a new user, the High Scores table is displayed correctly on th
         userThree = await homePage.createNewGame();
         await gamePage.clickCookies(4);
 
-        await test.step('Create a user that can buy two factories with one cookie remaining', async () => {
+        await test.step('Create a user that can buy a factory with two cookies remaining', async () => {
             userFour = await homePage.createNewGame();
-            await gamePage.clickCookies(7);
-            await gamePage.buyFactories(2);
+            await gamePage.clickCookies(14);
+            await gamePage.sellCookies(12); // Each cookie sells for $0.25
+            await gamePage.buyFactories(1); // Each factory costs $3
         });
 
         await homePage.goto();
