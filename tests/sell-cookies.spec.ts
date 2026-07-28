@@ -107,7 +107,7 @@ test.describe('As a user, I can sell cookies', { tag: ['@TC-017, @TC-011']}, () 
         // TODO: Add assertations for validation error messages and/or failed requests
     });
 
-    test.skip('As a user, I should only be able to submit positive integers when selling cookies', { tag: ['@TC-015', '@TC-019', '@'], annotation: {
+    test.skip('As a user, I should only be able to submit positive integers when selling cookies', { tag: ['@TC-015', '@TC-019'], annotation: {
         type: 'Bug',
         description: `https://rhadley98s-team.monday.com/boards/5100988704/pulses/3112405172,
             https://rhadley98s-team.monday.com/boards/5100988704/pulses/3112355834,
