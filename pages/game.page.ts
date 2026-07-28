@@ -17,7 +17,7 @@ export default class GamePage {
 
     cookieCount = () => this.page.getByTestId('cookies');
 
-    factoriesCount = () => this.page.getByTestId('factories')
+    factoryCount = () => this.page.getByTestId('factories')
     
     moneyCount = () => this.page.getByTestId('money')
 
@@ -75,5 +75,9 @@ export default class GamePage {
     public async buyFactories(amount: number) {
         await this.buyFactoriesInput().fill(amount.toString());
         await this.buyFactoriesButton().click();
+    }
+
+    public async getFactoryCount(): Promise<number> {
+        return Number(await this.factoryCount().textContent());
     }
 }
