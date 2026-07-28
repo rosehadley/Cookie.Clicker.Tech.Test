@@ -36,6 +36,13 @@ export default class GamePage {
         await this.page.goto(this.url(name));
     }
 
+    public async waitForUpdate(name: string) {
+        await this.page.waitForRequest(request => 
+            request.url() === `https://rose-hadley-2026-07-22-2.cookieclickertechtest.airelogic.com/rpc/${encodeURIComponent(name)}/` &&
+            request.method() === 'POST',
+        )
+    }
+
     public async getCookieCount(): Promise<number> {
         return Number(await this.cookieCount().textContent());
     }
@@ -44,6 +51,10 @@ export default class GamePage {
         for (let index = 0; index < amount; index++) {
             await this.clickCookieButton().click();
         }
+    }
+
+    public async getMoneyCount(): Promise<number> {
+        return Number(await this.moneyCount().textContent());
     }
 
     public async sellCookies(amount: number) {
