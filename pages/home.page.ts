@@ -19,15 +19,15 @@ export default class HomePage {
 
     highScoresHeader = () => this.page.getByRole('heading', { name: 'High Scores' });
 
-    highScoresTable = () => this.page.getByRole('table').filter({ hasText: 'Player' });
+    scoreboard = () => this.page.getByRole('table');
 
-    scoreTableUserRow = (name: string) => this.highScoresTable().filter({ has: this.highScoresTable().getByText(name, { exact: true }) })
+    scoreboardUserRow = (name: string) => this.page.getByRole('row').filter({has: this.scoreboardUserName(name)})
 
-    scoreTableUserName = (name: string) => this.scoreTableUserRow(name).getByRole('cell').first();
+    scoreboardUserName = (name: string) => this.page.getByRole('link', { name });
     
-    scoreTableUserScore = (name: string) => this.scoreTableUserRow(name).getByRole('cell').nth(1);
+    scoreboardUserScore = (name: string) => this.scoreboardUserRow(name).getByRole('cell').nth(1);
 
-    nthScoreTableScore = (index: number) => this.highScoresTable().getByRole('row').nth(index).getByRole('cell').nth(1);
+    nthScoreboardScore = (index: number) => this.page.getByRole('row').nth(index).getByRole('cell').nth(1);
 
 
     // Methods
@@ -50,15 +50,15 @@ export default class HomePage {
         return name;
     }
 
-    public async goToUserGameFromScoreTable(name: string) {
+    public async goToUserGameFromScoreboard(name: string) {
         await this.goto();
 
-        await this.scoreTableUserName(name).click();
+        await this.scoreboardUserName(name).click();
         await this.page.waitForURL(`**/game/${encodeURIComponent(name)}`);
     }
 
     public async getUserHighScoreTablePosition(name: string): Promise<number> {
-        let index = await this.highScoresTable().getByRole('row').evaluateAll((rows, name) => {
+        let index = await this.scoreboard().getByRole('row').evaluateAll((rows, name) => {
             return rows.findIndex( row => row.textContent?.includes(name))
         }, name);
 
