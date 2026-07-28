@@ -15,7 +15,7 @@ export default class GamePage {
 
     gameGreeting = (name: string) => this.page.getByText(`Hello ${name}`, { exact: true });
 
-    cookiesCount = () => this.page.getByTestId('cookies')
+    cookieCount = () => this.page.getByTestId('cookies');
 
     factoriesCount = () => this.page.getByTestId('factories')
     
@@ -34,6 +34,10 @@ export default class GamePage {
     // Methods
     public async goto(name: string) {
         await this.page.goto(this.url(name));
+    }
+
+    public async getCookieCount(): Promise<number> {
+        return Number(await this.cookieCount().textContent());
     }
 
     public async clickCookies(amount: number) {
