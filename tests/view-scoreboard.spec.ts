@@ -19,6 +19,7 @@ test.describe('As a new user, the High Scores table is displayed correctly on th
     test('As an existing user, I can navigate back to my game from the High Scores table on the homepage', { tag: ['@TC-008'] }, async ({ homePage, gamePage }) => {
         await test.step('Click on one of the user\'s names in the scoreboard', async () => {
             await homePage.scoreboardUserName(userOne).click();
+            await gamePage.page.waitForLoadState('domcontentloaded');
 
             expect(gamePage.page, 'The user should be redirected to their game').toHaveURL(gamePage.url(userOne));
             expect(gamePage.gameGreeting(userOne), 'The game greeting should display the correct user\'s name').toBeVisible();
@@ -27,8 +28,8 @@ test.describe('As a new user, the High Scores table is displayed correctly on th
 
     test('If a user has 0 factories and their score is static, their score in the High Scores table is correct', { tag: ['@TC-007'] }, async ({ homePage }) => {
         await expect(homePage.scoreboardUserScore(userOne), 'User one should have a score of 3').toHaveText('3');
-        await expect(homePage.scoreboardUserScore(userTwo), 'User two should have a score of 10').toHaveText('10');
-        await expect(homePage.scoreboardUserScore(userThree), 'User three should have a score of 4').toHaveText('4');
+        await expect(homePage.scoreboardUserScore(userTwo), 'User two should have a score of 4').toHaveText('4');
+        await expect(homePage.scoreboardUserScore(userThree), 'User three should have a score of 10').toHaveText('10');
     });
 
     test.skip('If a user has 0 factories and their score is static, the high scores are ordered by cookie count in descending order', { tag: ['@TC-003'], annotation: {
