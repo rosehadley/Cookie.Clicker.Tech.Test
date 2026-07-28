@@ -2,6 +2,7 @@ import { expect } from '@playwright/test';
 import { test } from '../fixtures/base-test';
 import createUniqueName from '../helpers/create-unique-name';
 import { faker } from '@faker-js/faker/locale/en';
+import Pricings from '../constants/pricings';
 
 test.describe('As a new user, I can create a new Cookie Clicker game session if I enter my details correctly', () => {
     test('As a new user, I am able to enter my name to create a new game', { tag: ['@TC-004'] }, async ({ homePage, gamePage }) => {
@@ -103,5 +104,44 @@ test.describe('As a new user, I can create a new Cookie Clicker game session if 
         await test.step('Reload the homepage to ensure it loads correctly', async () => {
             await homePage.goto();
         });
+    });
+
+    test('As a user, when I create a new game, I am able to leave and revisit the game', { tag: ['@TC-009', '@TC-029'] }, async ({ homePage, gamePage }) => {
+        const name = createUniqueName('Rose Hadley Save')
+        await test.step('Create a new game', async () => {
+            await homePage.createNewGame(name);
+        });
+
+        await test.step('Click to get some cookies', async () => {
+            await gamePage.clickCookies(15);
+        });
+
+        await test.step('Sell some cookies', async () => {
+            await gamePage.sellCookies(13);
+        });
+
+        await test.step('Buy a factory', async () => {
+            await gamePage.buyFactories(1);
+        });
+
+        const cookieCount = await gamePage.getCookieCount();
+        const moneyCount = await gamePage.getMoneyCount();
+        const factoryCount = await gamePage.getFactoryCount();
+
+        expect.soft(moneyCount).toBe((Pricings.CookiePrice * 13) - Pricings.FactoryCost);
+
+        await test.step('Go back to the Cookie Clicker homepage', async () => {
+            await homePage.goto();
+            await expect(homePage.scoreboardUserRow(name)).toBeVisible();
+        });
+
+        await test.step('Go back to the user\'s game', async () => {
+            await homePage.goToUserGameFromScoreboard(name);
+            await gamePage.waitForUpdate(name);
+        });
+
+        expect(await gamePage.getFactoryCount(), 'The factory count should be the same as when it was left').toBe(factoryCount);
+        expect(await gamePage.getMoneyCount(), 'The money count should be the same as when it was left').toBe(moneyCount);
+        expect(await gamePage.getCookieCount(), 'The cookie count should have increased because the user owns a factory').toBeGreaterThan(cookieCount);
     });
 });
