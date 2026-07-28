@@ -114,14 +114,17 @@ test.describe('As a new user, I can create a new Cookie Clicker game session if 
 
         await test.step('Click to get some cookies', async () => {
             await gamePage.clickCookies(15);
+            await gamePage.waitForUpdate(name);
         });
 
         await test.step('Sell some cookies', async () => {
             await gamePage.sellCookies(13);
+            await gamePage.waitForUpdate(name);
         });
 
         await test.step('Buy a factory', async () => {
             await gamePage.buyFactories(1);
+            await gamePage.waitForUpdate(name);
         });
 
         const cookieCount = await gamePage.getCookieCount();
