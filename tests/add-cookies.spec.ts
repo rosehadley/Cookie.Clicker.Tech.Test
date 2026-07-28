@@ -19,6 +19,7 @@ test.describe('As a new user, I can add cookies to my game', () => {
             expect(newCookieCount, 'The new cookie count should be the previous cookie count plus one').toBe(originalCookieCount + 1);
 
             await gamePage.clickCookies(5);
+            await gamePage.waitForUpdate(name);
             expect(await gamePage.getCookieCount(), 'The cookie count should have increased by 5').toBe(newCookieCount + 5);
         });
     });

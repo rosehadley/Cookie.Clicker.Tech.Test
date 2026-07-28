@@ -36,7 +36,17 @@ export default class GamePage {
         await this.page.goto(this.url(name));
     }
 
+    /**
+     * Waits for two status updates to get the latest cookie, money, and factory count
+     * Waits for two in case the first request catches old data
+     * @param name User name
+     */
     public async waitForUpdate(name: string) {
+        await this.page.waitForRequest(request => 
+            request.url() === `https://rose-hadley-2026-07-22-2.cookieclickertechtest.airelogic.com/rpc/${encodeURIComponent(name)}/` &&
+            request.method() === 'POST',
+        )
+
         await this.page.waitForRequest(request => 
             request.url() === `https://rose-hadley-2026-07-22-2.cookieclickertechtest.airelogic.com/rpc/${encodeURIComponent(name)}/` &&
             request.method() === 'POST',
