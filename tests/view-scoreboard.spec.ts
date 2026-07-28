@@ -6,12 +6,15 @@ test.describe('As a new user, the High Scores table is displayed correctly on th
     test.beforeEach('Create games with different scores', async ({ homePage, gamePage }) => {
         userOne = await homePage.createNewGame();
         await gamePage.clickCookies(3);
+        await gamePage.waitForUpdate(userOne);
 
         userTwo = await homePage.createNewGame();
         await gamePage.clickCookies(4);
+        await gamePage.waitForUpdate(userTwo);
 
         userThree = await homePage.createNewGame();
         await gamePage.clickCookies(10);
+        await gamePage.waitForUpdate(userThree);
 
         await homePage.goto();
     });
@@ -57,6 +60,7 @@ test.describe('As a new user, the High Scores table is displayed correctly on th
             await gamePage.clickCookies(14);
             await gamePage.sellCookies(12); // Each cookie sells for $0.25
             await gamePage.buyFactories(1); // Each factory costs $3
+            await gamePage.waitForUpdate(userFour);
             await homePage.goto();
         });
 
