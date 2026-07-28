@@ -4,7 +4,7 @@ import Pricings from '../constants/pricings'
 import { faker } from '@faker-js/faker/locale/en';
 import createUniqueName from '../helpers/create-unique-name';
 
-test.describe('As a user, I can sell cookies', () => {
+test.describe('As a user, I can sell cookies', { tag: ['@TC-017, @TC-011']}, () => {
     const name = createUniqueName('Sell Cookies');
     test.beforeEach('Create a new game', async ({ homePage }) => {
         await homePage.createNewGame(name);
@@ -17,7 +17,7 @@ test.describe('As a user, I can sell cookies', () => {
         let cookieCount: number = 0, moneyCount: number = 0
         await test.step('Click on the \'Click Cookie!\' button and get the cookie and money count', async () => {
             await gamePage.clickCookies(1);
-            await gamePage.waitForUpdate(name)
+            await gamePage.waitForUpdate(name);
 
             moneyCount = await gamePage.getMoneyCount();
             expect.soft(moneyCount, 'The initial money count should be 0').toBe(0);
@@ -27,7 +27,7 @@ test.describe('As a user, I can sell cookies', () => {
         });        
         
         await test.step('Enter 1 into the sell cookies textbox and sell the cookie', async () => {
-            await gamePage.sellCookiesInput().fill('1')
+            await gamePage.sellCookiesInput().fill('1');
             await gamePage.sellCookiesButton().click();
             await gamePage.waitForUpdate(name);
 
@@ -73,7 +73,7 @@ test.describe('As a user, I can sell cookies', () => {
         let cookieCount: number = 0, moneyCount: number = 0
         await test.step('Click on the \'Click Cookie!\' button once and get the cookie and money count', async () => {
             await gamePage.clickCookies(1);
-            await gamePage.waitForUpdate(name)
+            await gamePage.waitForUpdate(name);
 
             moneyCount = await gamePage.getMoneyCount();
             expect.soft(moneyCount, 'The initial money count should be 0').toBe(0);
@@ -96,7 +96,7 @@ test.describe('As a user, I can sell cookies', () => {
         description: 'https://rhadley98s-team.monday.com/boards/5100988704/pulses/3119283032'
     } }, async ({ gamePage }) => {
         await gamePage.clickCookies(3);
-        await gamePage.waitForUpdate(name)     
+        await gamePage.waitForUpdate(name);     
         
         await test.step('Enter a string into the Sell Cookies textbox and attempt to click the Sell Cookies! button', async () => {
             await gamePage.sellCookiesInput().fill(faker.word.words(1));
