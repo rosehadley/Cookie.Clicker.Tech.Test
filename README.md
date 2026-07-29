@@ -69,3 +69,4 @@ npx playwright show-report
 - helpers/ - any helper functions
 - constants/ - shared constants such as pricing values and other fixed test data
 - playwright.config.ts - Playwright configuration
+- Tests are tagged with their corresponding test case ID(s) from monday.com
