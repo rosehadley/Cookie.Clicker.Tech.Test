@@ -26,7 +26,8 @@ Before running the tests, make sure you have:
 
 2. Install dependencies 
     ``` 
-    npm install 
+    npm install
+    npm install --save-dev @faker-js/faker
     ```
 
 3. Install Playwright browsers
